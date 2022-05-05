@@ -1,4 +1,5 @@
-# tick+grafana
+# Grafana UI Time Series Monitoring with InfluxDB 2.0 and Telegraf
+# Grafana + tick-stack 
 
 Run the complete tick stack plus grafana using docker compose.  This uses the latest versions of each individual docker image.
 
