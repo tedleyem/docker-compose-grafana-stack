@@ -1,39 +1,44 @@
-version: '3.6'
-services:
-  telegraf:
-    image: telegraf:1.18-alpine
-    volumes:
-    - ./telegraf/etc/telegraf.conf:/etc/telegraf/telegraf.conf:ro
-    depends_on:
-      - influxdb
-    links:
-      - influxdb
-    ports:
-    - '127.0.0.1:8125:8125/udp'
+version: "3.9"
 
+services:
   influxdb:
-    image: influxdb:1.8-alpine
-    env_file: configuration.env
-    ports:
-      - '127.0.0.1:8086:8086'
+    container_name: influxdb
+    image: influxdb:2.2.0-alpine
     volumes:
-      - ./:/imports
-      - influxdb_data:/var/lib/influxdb
+      - influxdb-lib:/var/lib/influxdb2
+    env_file:
+      # BE SURE TO CHANGE THIS LINE BEFORE GOING TO PRODUCTION
+      - ./env.influx
+    ports:
+      - 8086:8086
+    restart: always
+    privileged: true
 
   grafana:
-    image: grafana/grafana:8.0.2
+    container_name: grafana
+    image: grafana/grafana:8.5.3
+    volumes:
+      - ./grafana/etc:/etc/grafana:ro
+      - grafana-lib:/var/lib/grafana
+      - grafana-log:/var/log/grafana
+    links:
+      - influxdb:influxdb
+    env_file:
+      # BE SURE TO CHANGE THIS LINE BEFORE GOING TO PRODUCTION
+      - ./env.grafana
+    ports:
+      - 3000:3000
     depends_on:
       - influxdb
-    env_file: configuration.env
-    links:
-      - influxdb
-    ports:
-      - '127.0.0.1:3000:3000'
-    volumes:
-      - grafana_data:/var/lib/grafana
-      - ./grafana/provisioning/:/etc/grafana/provisioning/
-      - ./grafana/dashboards/:/var/lib/grafana/dashboards/
+    restart: always
+    privileged: true
 
 volumes:
-  grafana_data: {}
-  influxdb_data: {}
+  influxdb-lib:
+    external: false
+
+  grafana-lib:
+    external: false
+
+  grafana-log:
+    external: false

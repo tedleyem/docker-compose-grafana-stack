@@ -12,13 +12,7 @@ Start all the images as follows:
 
     # Start all images in the background
     $ docker-compose up -d
-
-##### Older versions of TIG stick 
-Spin up Influxdb v1.8 and Grafana 8.0.2 
-    # spin up an older instance of TIG Stack 
-    $ cd influx-1.6 
-    $ docker-compose up -d 
-
+ 
 ### Check that Grafana UI 
 Open your browser to the link below:
 
