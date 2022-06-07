@@ -1,4 +1,4 @@
-# Grafana 8.5.4 Influxdb 2.2 
+# Grafana 8.5.4 and Influxdb 2.2 Monitoring stack
 This repo is for spinning up grafana 8.x and connecting to influxdbv2.2 
 
 #### Spinning up the stack 
