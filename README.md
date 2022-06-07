@@ -1,23 +1,29 @@
-# Grafana UI Time Series Monitoring with InfluxDB 2.0 and Telegraf
-# Grafana + TIG-stack 
+# Grafana 8.5.4 Influxdb 2.2 
+This repo is for spinning up grafana 8.x and connecting to influxdbv2.2 
 
-Run the complete TIG stack plus grafana using docker compose.  This uses the latest versions of each individual docker image.
+#### Spinning up the stack 
+ To spin up the entire stack you can run the following 
 
-- [telegraf](https://hub.docker.com/_/telegraf/)
-- [influxdb](https://hub.docker.com/_/influxdb/) 
-- [grafana/grafana](https://hub.docker.com/r/grafana/grafana/)
+```
+docker-compose up -d 
+```
 
-## Usage
-Start all the images as follows:
+# Variables 
+ Variables for the entire stack can be found in the configuration.env file 
 
-    # Start all images in the background
-    $ docker-compose up -d
+ NOTE: These variables will be implemented into terraform and AWS variables in the future. 
 
-##### Older versions of TIG stick 
-Spin up Influxdb v1.8 and Grafana 8.0.2 
-    # spin up an older instance of TIG Stack 
-    $ cd influx-1.6 
-    $ docker-compose up -d 
+#### Datasources
+ YAML files for setting up the following grafana features can be found in this dir: 
+  grafana/8.5.4/conf/provisioning
+  
+- ACCESS-CONTROL:  
+- DASHBOARDS: are provisioned with YAML and can be found in grafana/8.5.4/conf/provisioning/dashboards
+- DATASOURCES/DATABASES:  Influxdb v2.2 config files can be found in the grafana/8.5.4/conf/provisioning/datasources (flux.yml is being used as the query language for influxdb 2.0)
+- NOTIFIERS: the notifiers can be added in grafana/8.5.4/conf/provisioning/notifiers. Currently there is a slack.yml 
+file used for configuring slack notifications.
+- PLUGINS: 
+ 
 
 ### Check that Grafana UI 
 Open your browser to the link below:
@@ -33,4 +39,4 @@ Run this curl command, if no errors occur InfluxDB is running:
 
     curl http://localhost:8086/ping
 
-    
+     

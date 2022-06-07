@@ -1,44 +1,54 @@
-version: "3"
-
+version: '3.6'
 services:
   influxdb:
+    image: influxdb
     container_name: influxdb
-    image: influxdb:2.2.0-alpine
-    volumes:
-      - influxdb-lib:/var/lib/influxdb2
-    env_file:
-      # BE SURE TO CHANGE THIS LINE BEFORE GOING TO PRODUCTION
-      - ./env.influx
+    build: 
+      context: ./influxdb/2.2/
+      dockerfile: Dockerfile
+    env_file: 
+      - configuration.env
     ports:
-      - 8086:8086
-    restart: always
-    privileged: true
+      - '127.0.0.1:8086:8086' 
+    volumes: 
+      - influxdb_data:/var/lib/influxdb 
 
   grafana:
-    container_name: grafana
-    image: grafana/grafana:8.5.3
-    volumes:
-      - ./grafana/etc:/etc/grafana:ro
-      - grafana-lib:/var/lib/grafana
-      - grafana-log:/var/log/grafana
-    links:
-      - influxdb:influxdb
-    env_file:
-      # BE SURE TO CHANGE THIS LINE BEFORE GOING TO PRODUCTION
-      - ./env.grafana
-    ports:
-      - 3000:3000
+    image: grafana
+    container_name: grafana_ui
+    build:
+      context: ./grafana/8.5.4/
+      dockerfile: Dockerfile
     depends_on:
       - influxdb
-    restart: always
-    privileged: true
+    env_file: 
+      - configuration.env
+    links:
+      - influxdb 
+    ports:
+      - '127.0.0.1:3000:3000' 
+    volumes:
+      - grafana_data:/var/lib/grafana
+#      - ./grafana/provisioning/:/etc/grafana/provisioning/
+
+  telegraf: 
+    image: telegraf
+    container_name: telegraf_agent
+    env_file: 
+      - configuration.env
+    build: 
+      context: ./telegraf/etc/1.22/
+      dockerfile: Dockerfile  
+    volumes:
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf
+    depends_on:
+      - influxdb
+    links:
+      - influxdb
+    ports:  
+      - "8125:8125"
+      - '8125:8125/udp'
 
 volumes:
-  influxdb-lib:
-    external: false
-
-  grafana-lib:
-    external: false
-
-  grafana-log:
-    external: false
+  grafana_data: {}
+  influxdb_data: {}
