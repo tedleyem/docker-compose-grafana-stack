@@ -1,2 +1,7 @@
+.DS_Store  
+.grafana/8.5.4/public/img/* 
+grafana/8.5.4/devenv
+grafana/8.5.4/docs
 **/data/
-.DS_Store
+test/
+notes.txt
