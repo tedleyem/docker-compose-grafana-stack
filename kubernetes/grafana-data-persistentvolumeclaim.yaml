@@ -3,11 +3,11 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: grafana-claim0
-  name: grafana-claim0
+    io.kompose.service: grafana-data
+  name: grafana-data
 spec:
   accessModes:
-  - ReadOnlyMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 100Mi

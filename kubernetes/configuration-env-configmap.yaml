@@ -1,0 +1,21 @@
+apiVersion: v1
+data:
+  DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: fxc-VWVbYTwIAiHetr1hiV5H9Ke7fTtshbvQ79y-hMMeuCWKxgvpaKcN1P6vY2m
+  DOCKER_INFLUXDB_INIT_BUCKET: data
+  DOCKER_INFLUXDB_INIT_MODE: setup
+  DOCKER_INFLUXDB_INIT_ORG: my-org
+  DOCKER_INFLUXDB_INIT_PASSWORD: admin
+  DOCKER_INFLUXDB_INIT_RETENTION: 365d
+  DOCKER_INFLUXDB_INIT_USERNAME: admin
+  GF_DOMAIN: localhost
+  GF_INIT_ORG: my-org
+  GF_INSTALL_PLUGINS: grafana-clock-panel,aws-datasource-provisioner-app,grafana-jira-datasource,grafana-newrelic-datasource,grafana-servicenow-datasource,grafana-simple-json-datasource,grafana-singlestat-panel,grafana-worldmap-panel,grafana-timestream-datasource
+  GF_SECRET_KEY: SW2YcwT23Ib9zpOOhowevwPsMm
+  GF_SECURITY_ADMIN_PASSWORD: admin
+  GF_SECURITY_ADMIN_USER: admin
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: grafana-configuration-env
+  name: configuration-env

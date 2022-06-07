@@ -2,8 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.yml
-    kompose.version: 1.21.0 (992df58d8)
+    kompose.cmd: kompose convert
+    kompose.version: 1.26.1 (HEAD)
   creationTimestamp: null
   labels:
     io.kompose.service: grafana
@@ -18,46 +18,95 @@ spec:
   template:
     metadata:
       annotations:
-        kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.yml
-        kompose.version: 1.21.0 (992df58d8)
+        kompose.cmd: kompose convert
+        kompose.version: 1.26.1 (HEAD)
       creationTimestamp: null
       labels:
         io.kompose.service: grafana
     spec:
       containers:
-      - env:
-        - name: GF_INSTALL_PLUGINS
-          valueFrom:
-            configMapKeyRef:
-              key: GF_INSTALL_PLUGINS
-              name: env-grafana
-        image: grafana/grafana:8.5.3
-        imagePullPolicy: ""
-        name: grafana
-        ports:
-        - containerPort: 3000
-        resources: {}
-        securityContext:
-          privileged: true
-        volumeMounts:
-        - mountPath: /etc/grafana
-          name: grafana-claim0
-          readOnly: true
-        - mountPath: /var/lib/grafana
-          name: grafana-lib
-        - mountPath: /var/log/grafana
-          name: grafana-log
+        - env:
+            - name: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
+              valueFrom:
+                configMapKeyRef:
+                  key: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
+                  name: configuration-env
+            - name: DOCKER_INFLUXDB_INIT_BUCKET
+              valueFrom:
+                configMapKeyRef:
+                  key: DOCKER_INFLUXDB_INIT_BUCKET
+                  name: configuration-env
+            - name: DOCKER_INFLUXDB_INIT_MODE
+              valueFrom:
+                configMapKeyRef:
+                  key: DOCKER_INFLUXDB_INIT_MODE
+                  name: configuration-env
+            - name: DOCKER_INFLUXDB_INIT_ORG
+              valueFrom:
+                configMapKeyRef:
+                  key: DOCKER_INFLUXDB_INIT_ORG
+                  name: configuration-env
+            - name: DOCKER_INFLUXDB_INIT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: DOCKER_INFLUXDB_INIT_PASSWORD
+                  name: configuration-env
+            - name: DOCKER_INFLUXDB_INIT_RETENTION
+              valueFrom:
+                configMapKeyRef:
+                  key: DOCKER_INFLUXDB_INIT_RETENTION
+                  name: configuration-env
+            - name: DOCKER_INFLUXDB_INIT_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  key: DOCKER_INFLUXDB_INIT_USERNAME
+                  name: configuration-env
+            - name: GF_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  key: GF_DOMAIN
+                  name: configuration-env
+            - name: GF_INIT_ORG
+              valueFrom:
+                configMapKeyRef:
+                  key: GF_INIT_ORG
+                  name: configuration-env
+            - name: GF_INSTALL_PLUGINS
+              valueFrom:
+                configMapKeyRef:
+                  key: GF_INSTALL_PLUGINS
+                  name: configuration-env
+            - name: GF_SECRET_KEY
+              valueFrom:
+                configMapKeyRef:
+                  key: GF_SECRET_KEY
+                  name: configuration-env
+            - name: GF_SECURITY_ADMIN_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: GF_SECURITY_ADMIN_PASSWORD
+                  name: configuration-env
+            - name: GF_SECURITY_ADMIN_USER
+              valueFrom:
+                configMapKeyRef:
+                  key: GF_SECURITY_ADMIN_USER
+                  name: configuration-env
+          image: grafana
+          name: grafana-ui
+          ports:
+            - containerPort: 3000
+          resources: {}
+          volumeMounts:
+            - mountPath: /var/lib/grafana
+              name: grafana-data
+            - mountPath: /etc/grafana/provisioning/
+              name: grafana-claim1
       restartPolicy: Always
-      serviceAccountName: ""
       volumes:
-      - name: grafana-claim0
-        persistentVolumeClaim:
-          claimName: grafana-claim0
-          readOnly: true
-      - name: grafana-lib
-        persistentVolumeClaim:
-          claimName: grafana-lib
-      - name: grafana-log
-        persistentVolumeClaim:
-          claimName: grafana-log
+        - name: grafana-data
+          persistentVolumeClaim:
+            claimName: grafana-data
+        - name: grafana-claim1
+          persistentVolumeClaim:
+            claimName: grafana-claim1
 status: {}
