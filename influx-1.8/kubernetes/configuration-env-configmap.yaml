@@ -1,0 +1,14 @@
+apiVersion: v1
+data:
+  GF_INSTALL_PLUGINS: ""
+  GF_SECURITY_ADMIN_PASSWORD: admin
+  GF_SECURITY_ADMIN_USER: admin
+  INFLUXDB_ADMIN_PASSWORD: admin
+  INFLUXDB_ADMIN_USER: admin
+  INFLUXDB_DB: influx
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: grafana-configuration-env
+  name: configuration-env
